@@ -1,0 +1,40 @@
+package org.acme.kogito
+
+import org.acme.kogito.model.Service;
+import org.acme.kogito.model.NetElement;
+
+
+rule "Is International Roaming" ruleflow-group "service"
+
+when
+    $service: Service(name.equals("International Roaming"), $hlr : hlr, $lte_hss : lte_hss, $smsc : smsc)
+then
+
+    	$hlr.setActive(true); $hlr.setParam1("ROAM1"); $hlr.setParam2("ROAM2");
+        $lte_hss.setActive(true); $lte_hss.setParam1("ROAM3"); $lte_hss.setParam2("ROAM4");
+        $smsc.setActive(false); 
+
+end
+
+rule "Is IPTV Service" ruleflow-group "service"
+
+
+when
+    $service: Service(name.equals("IPTV Service"), $hlr : hlr, $lte_hss : lte_hss, $smsc : smsc)
+then
+    	$hlr.setActive(true); $hlr.setParam1("IPTV1"); $hlr.setParam2("IPTV2");
+        $lte_hss.setActive(false);
+        $smsc.setActive(false); 
+end
+
+rule "Is DEFAULT Service" ruleflow-group "service"
+
+when
+    $service: Service(name.equals("BASIC Service"), $hlr : hlr, $lte_hss : lte_hss, $smsc : smsc)
+then
+
+    	$smsc.setActive(true); $smsc.setParam1("DEFAULT1"); $smsc.setParam2("DEFAULT2");
+        $lte_hss.setActive(false);
+        $hlr.setActive(false); 
+
+end
